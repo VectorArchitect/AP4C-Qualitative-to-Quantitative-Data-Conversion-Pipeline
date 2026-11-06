@@ -31,7 +31,7 @@ class CRCTests(unittest.TestCase):
 
     def test_verify_packet_rejects_packets_shorter_than_three_bytes(self):
         with self.assertRaises(ValueError):
-            verify_packet(b"\\x01\\x02")
+            verify_packet(bytes((0x01, 0x02)))
 
     def test_append_crc_rejects_empty_payload(self):
         with self.assertRaises(ValueError):
