@@ -53,24 +53,33 @@ try:
 
                 time.sleep(0.5)  # even if data not received the program will not shut for this amount of time
 
-                line = ser.readline(35).rstrip()   #receiving data
+                # Read a fixed-length binary response. readline()/rstrip() can
+                # wait for or strip newline-valued bytes inside the protocol frame.
+                line = ser.read(35)
                 line_length = len(line)
 
-                byte_array = line  # decimal array of 35 inputs
-                byte = byte_array[3:33]
-                # st.write(f"#### Data received:")
-                # st.info(f"{line}")
-                # st.write(f"length of data: {line_length}")
-                
-                device_add=line[0]
-                st.write(f"##### Device Address: {line[0]} [{device_add:02x}]")
-
-                if line_length==0:
+                if line_length == 0:
                     st.info("Port Connected, No Data Received !")
+                    return
 
+                if line_length != 35:
+                    st.warning(f"Incomplete response: received {line_length} of 35 bytes.")
+                    ser.reset_input_buffer()
+                    return
 
-        ###############################################Printing Data On Screen####################################################
-                else:
+                crch, crcl, is_valid = verify_packet(line)
+                if not is_valid:
+                    st.error(f"Invalid response CRC (expected {crch:02X} {crcl:02X}).")
+                    return
+
+                if line[2] != 30:
+                    st.error(f"Unexpected response byte count: {line[2]} (expected 30).")
+                    return
+
+                byte_array = line
+                byte = byte_array[3:33]
+                device_add = line[0]
+                st.write(f"##### Device Address: {device_add} [{device_add:02x}]")
 
                     var = ['res_0', 'res_1', 'CH_con', 'As_con', 'CN_con', 'Ph_con', 'Sol_con', 'Alarm', 'Status']
                     # byte_array = line  # decimal array of 35 inputs
@@ -117,7 +126,7 @@ try:
                         # print(f"Alarm: {sum}")
                         # print(f"{sum:04b}")
                         st.write(f"##### Alarm: {sum:04b}")
-                        sixteen_bit = f"{sum:04b}"
+                        sixteen_bit = f"{sum:08b}"
                         lenS = len(sixteen_bit)
                         k = lenS
                         for val in sixteen_bit:
@@ -136,7 +145,7 @@ try:
                         # print(f"Status: {sum}")
                         # print(f"{sum:04b}")
                         st.write(f"##### Status: {sum:04b}")
-                        sixteen_bit = f"{sum:04b}"
+                        sixteen_bit = f"{sum:08b}"
                         lenS = len(sixteen_bit)
                         k = lenS
                         for val in sixteen_bit:
@@ -171,32 +180,16 @@ try:
                         # print("done1-date and time values assigned")
                         # 2 Extract specific data (Adjust indices based on your device's protocol)
                         # Example: data1 is byte index 3, data2 is byte index 4,
-                        d1 = line[3] + line[4]
-                        data1 = f"{d1:02x}" if len(line) > 4 else "N/A"
-                        # print("done2-data1 value assigned")
-                        d2 = line[5] + line[6]
-                        data2 = f"{d2:02x}" if len(line) > 5 else "N/A"
-                        # print("done3-data2 value assigned")
-                        d3 = line[7] + line[8]
-                        data3 = f"{d3:02x}" if len(line) > 8 else "N/A"
-                        # print("done3-data3 value assigned")
-                        d4 = line[9] + line[10]
-                        data4 = f"{d4:02x}" if len(line) > 10 else "N/A"
-                        # print("done3-data4 value assigned")
-                        d5 = line[11] + line[12]
-                        data5 = f"{d5:02x}" if len(line) > 12 else "N/A"
-                        # print("done3-data5 value assigned")
-                        d6 = line[13] + line[14]
-                        data6 = f"{d6:02x}" if len(line) > 14 else "N/A"
-                        # print("done3-data6 value assigned")
-                        d7 = line[15] + line[16]
-                        data7 = f"{d7:02x}" if len(line) > 16 else "N/A"
-                        # print("done3-data7 value assigned")
-                        d8 = line[17]
-                        data8 = f"{d8:04b}" if len(line) > 17 else "N/A"
-                        # print("done3-data8 value assigned")
-                        d9 = line[18]
-                        data9 = f"{d9:04b}" if len(line) > 18 else "N/A"
+                        # Match the big-endian 16-bit values shown in the dashboard.
+                        data1 = f"{int.from_bytes(line[3:5], 'big'):04x}"
+                        data2 = f"{int.from_bytes(line[5:7], 'big'):04x}"
+                        data3 = f"{int.from_bytes(line[7:9], 'big'):04x}"
+                        data4 = f"{int.from_bytes(line[9:11], 'big'):04x}"
+                        data5 = f"{int.from_bytes(line[11:13], 'big'):04x}"
+                        data6 = f"{int.from_bytes(line[13:15], 'big'):04x}"
+                        data7 = f"{int.from_bytes(line[15:17], 'big'):04x}"
+                        data8 = f"{line[17]:08b}"
+                        data9 = f"{line[18]:08b}"
                         # print("done3-data9 value assigned")
 
                         # print("done4--converting 'line' to bytes then hex...")
