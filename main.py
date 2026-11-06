@@ -81,135 +81,135 @@ try:
                 device_add = line[0]
                 st.write(f"##### Device Address: {device_add} [{device_add:02x}]")
 
-                    var = ['res_0', 'res_1', 'CH_con', 'As_con', 'CN_con', 'Ph_con', 'Sol_con', 'Alarm', 'Status']
-                    # byte_array = line  # decimal array of 35 inputs
-                    # byte = byte_array[3:33]
-                    print(byte)
-                    # st.write(f"{byte}")
-                    col1, col2, col3, col4 = st.columns(4, gap='large', border=True)
-                    with col1:  ########33333333333333333################
-                        j = 0
-                        for i in range(0, 4, 2):
-                            sum = (byte[i] * 256) + byte[i + 1]
-                            # print(sum)
-                            # print(f"{sum:016b}")
-                            vari = var[j]
+                var = ['res_0', 'res_1', 'CH_con', 'As_con', 'CN_con', 'Ph_con', 'Sol_con', 'Alarm', 'Status']
+                # byte_array = line  # decimal array of 35 inputs
+                # byte = byte_array[3:33]
+                print(byte)
+                # st.write(f"{byte}")
+                col1, col2, col3, col4 = st.columns(4, gap='large', border=True)
+                with col1:  ########33333333333333333################
+                    j = 0
+                    for i in range(0, 4, 2):
+                        sum = (byte[i] * 256) + byte[i + 1]
+                        # print(sum)
+                        # print(f"{sum:016b}")
+                        vari = var[j]
 
-                            # print(f"{vari}: {sum}")
-                            st.write(f"##### {vari} ")
+                        # print(f"{vari}: {sum}")
+                        st.write(f"##### {vari} ")
 
-                            st.info(f"{sum}")  # {sum: 04b}
-                            j += 1
+                        st.info(f"{sum}")  # {sum: 04b}
+                        j += 1
 
-                    with col2:  ########33333333333333333################
-                        j = 2
-                        for i in range(4, 13, 2):
-                            sum = (byte[i] * 256) + byte[i + 1]
-                            # print(sum)
-                            # print(f"{sum:016b}")
-                            vari = var[j]
+                with col2:  ########33333333333333333################
+                    j = 2
+                    for i in range(4, 13, 2):
+                        sum = (byte[i] * 256) + byte[i + 1]
+                        # print(sum)
+                        # print(f"{sum:016b}")
+                        vari = var[j]
 
-                            # print(f"{var[j]}: {sum}")
-                            st.write(f"##### {vari} ")
+                        # print(f"{var[j]}: {sum}")
+                        st.write(f"##### {vari} ")
 
-                            st.info(f"{sum}")  # {sum: 04b}
+                        st.info(f"{sum}")  # {sum: 04b}
 
-                            j += 1
+                        j += 1
 
-                            # print("----")
-
-                    # for alarm and status
-                    with col3:
-                        # Alarm
-                        sum = (byte[14])
-                        vari = var[7]
-                        # print(f"Alarm: {sum}")
-                        # print(f"{sum:04b}")
-                        st.write(f"##### Alarm: {sum:04b}")
-                        sixteen_bit = f"{sum:08b}"
-                        lenS = len(sixteen_bit)
-                        k = lenS
-                        for val in sixteen_bit:
-                            k -= 1
-                            if val == '1':
-                                # print(f'Alarm[{k}]: on')
-                                # st.write(f'Alarm[{k+1}]: on')
-                                st.success(f"Alarm[{k + 1}]: ON")
-                            elif val != '1':
-                                st.error(f"Alarm[{k + 1}]: OFF")
                         # print("----")
-                    with col4:
-                        # Status
-                        sum = (byte[15])
-                        vari = var[8]
-                        # print(f"Status: {sum}")
-                        # print(f"{sum:04b}")
-                        st.write(f"##### Status: {sum:04b}")
-                        sixteen_bit = f"{sum:08b}"
-                        lenS = len(sixteen_bit)
-                        k = lenS
-                        for val in sixteen_bit:
-                            k -= 1
-                            if val == '1':
-                                # print(f'Status[{k}]: on')
-                                # st.write(f'Status[{k+1}]: on')
-                                st.success(f"Status[{k + 1}]: ON")
-                            elif val != '1':
-                                st.error(f"Status[{k + 1}]: OFF")
 
-                    st.write(f"#### Data received:")
-                    st.info(f"{line}")
-                    st.write(f"length of data: {line_length}")
+                # for alarm and status
+                with col3:
+                    # Alarm
+                    sum = (byte[14])
+                    vari = var[7]
+                    # print(f"Alarm: {sum}")
+                    # print(f"{sum:04b}")
+                    st.write(f"##### Alarm: {sum:04b}")
+                    sixteen_bit = f"{sum:08b}"
+                    lenS = len(sixteen_bit)
+                    k = lenS
+                    for val in sixteen_bit:
+                        k -= 1
+                        if val == '1':
+                            # print(f'Alarm[{k}]: on')
+                            # st.write(f'Alarm[{k+1}]: on')
+                            st.success(f"Alarm[{k + 1}]: ON")
+                        elif val != '1':
+                            st.error(f"Alarm[{k + 1}]: OFF")
+                    # print("----")
+                with col4:
+                    # Status
+                    sum = (byte[15])
+                    vari = var[8]
+                    # print(f"Status: {sum}")
+                    # print(f"{sum:04b}")
+                    st.write(f"##### Status: {sum:04b}")
+                    sixteen_bit = f"{sum:08b}"
+                    lenS = len(sixteen_bit)
+                    k = lenS
+                    for val in sixteen_bit:
+                        k -= 1
+                        if val == '1':
+                            # print(f'Status[{k}]: on')
+                            # st.write(f'Status[{k+1}]: on')
+                            st.success(f"Status[{k + 1}]: ON")
+                        elif val != '1':
+                            st.error(f"Status[{k + 1}]: OFF")
 
-                    st.write(f"#### Usable Data: ")
-                    st.info(f"{byte}")
+                st.write(f"#### Data received:")
+                st.info(f"{line}")
+                st.write(f"length of data: {line_length}")
 
-                    st.write(f"##### Device Address: ")
-                    st.info(f"{line[0]}")
-                    st.write(f"##### Function Code: ")
-                    st.info(f"{line[1]}")
-                    st.write(f"##### No. Of Variable: ")
-                    st.info(f"{line[2]}")
+                st.write(f"#### Usable Data: ")
+                st.info(f"{byte}")
 
-        ################################## Logging this Data to log file###############################
-                    if not line:
-                        print(f"[{datetime.now().strftime('%H:%M:%S')}]Port Connected, but no data received.")
-                    else:
-                        # 1 Capture Time Stamp
-                        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
-                        # print("done1-date and time values assigned")
-                        # 2 Extract specific data (Adjust indices based on your device's protocol)
-                        # Example: data1 is byte index 3, data2 is byte index 4,
-                        # Match the big-endian 16-bit values shown in the dashboard.
-                        data1 = f"{int.from_bytes(line[3:5], 'big'):04x}"
-                        data2 = f"{int.from_bytes(line[5:7], 'big'):04x}"
-                        data3 = f"{int.from_bytes(line[7:9], 'big'):04x}"
-                        data4 = f"{int.from_bytes(line[9:11], 'big'):04x}"
-                        data5 = f"{int.from_bytes(line[11:13], 'big'):04x}"
-                        data6 = f"{int.from_bytes(line[13:15], 'big'):04x}"
-                        data7 = f"{int.from_bytes(line[15:17], 'big'):04x}"
-                        data8 = f"{line[17]:08b}"
-                        data9 = f"{line[18]:08b}"
-                        # print("done3-data9 value assigned")
+                st.write(f"##### Device Address: ")
+                st.info(f"{line[0]}")
+                st.write(f"##### Function Code: ")
+                st.info(f"{line[1]}")
+                st.write(f"##### No. Of Variable: ")
+                st.info(f"{line[2]}")
 
-                        # print("done4--converting 'line' to bytes then hex...")
-                        full_payload = bytes(line).hex(' ')  #### converting 'line' to bytes then hex
-                        # print("done4-converted")
+    ################################## Logging this Data to log file###############################
+                if not line:
+                    print(f"[{datetime.now().strftime('%H:%M:%S')}]Port Connected, but no data received.")
+                else:
+                    # 1 Capture Time Stamp
+                    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+                    # print("done1-date and time values assigned")
+                    # 2 Extract specific data (Adjust indices based on your device's protocol)
+                    # Example: data1 is byte index 3, data2 is byte index 4,
+                    # Match the big-endian 16-bit values shown in the dashboard.
+                    data1 = f"{int.from_bytes(line[3:5], 'big'):04x}"
+                    data2 = f"{int.from_bytes(line[5:7], 'big'):04x}"
+                    data3 = f"{int.from_bytes(line[7:9], 'big'):04x}"
+                    data4 = f"{int.from_bytes(line[9:11], 'big'):04x}"
+                    data5 = f"{int.from_bytes(line[11:13], 'big'):04x}"
+                    data6 = f"{int.from_bytes(line[13:15], 'big'):04x}"
+                    data7 = f"{int.from_bytes(line[15:17], 'big'):04x}"
+                    data8 = f"{line[17]:08b}"
+                    data9 = f"{line[18]:08b}"
+                    # print("done3-data9 value assigned")
 
-                        data_csv = [data1, data2, data3, data4, data5, data6, data7, data8, data9]
-                        # 3 Dump to csv
-                        # print("logging data to csv...")
-                        with open(LOG_FILE, 'a', newline='') as f:
-                            writerr = csv.writer(f)  # ????
-                            writerr.writerow([timestamp] + data_csv)
-                            print(f"Data Logged: data1: {data1}, data2: {data2} at time: {timestamp}")
+                    # print("done4--converting 'line' to bytes then hex...")
+                    full_payload = bytes(line).hex(' ')  #### converting 'line' to bytes then hex
+                    # print("done4-converted")
 
-                # if ser.in_waiting > 0:
-                #     line = ser.readline().decode('utf-8').rstrip()
-                #     print("Received : " + line)
-                # elif status=='/exit':
-                #
-                #     break
+                    data_csv = [data1, data2, data3, data4, data5, data6, data7, data8, data9]
+                    # 3 Dump to csv
+                    # print("logging data to csv...")
+                    with open(LOG_FILE, 'a', newline='') as f:
+                        writerr = csv.writer(f)  # ????
+                        writerr.writerow([timestamp] + data_csv)
+                        print(f"Data Logged: data1: {data1}, data2: {data2} at time: {timestamp}")
+
+            # if ser.in_waiting > 0:
+            #     line = ser.readline().decode('utf-8').rstrip()
+            #     print("Received : " + line)
+            # elif status=='/exit':
+            #
+            #     break
 
         func()
 except Exception as e:
