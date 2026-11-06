@@ -22,31 +22,38 @@ def calcrc(data, ldata):      #calculating CRC and returning ch, cl
 
 
 def verify_packet(packet_bytes):
-    #re-calculates the crc received along with data and verifies it
-    #will be used by server when received request from client
     """
-    Given a full packet (data + 2 CRC bytes at end),
-    verifies CRC and returns (crch, crcl, is_valid).
-    """
-    data = list(packet_bytes[:-2])
-    received_crch = packet_bytes[-2]
-    received_crcl = packet_bytes[-1]
-    ldata = len(data) - 1
+    Recalculate the CRC for a complete packet (payload + two CRC bytes).
 
-    crcl, crch = calcrc(data, ldata)
-    is_valid = (crch == received_crch) and (crcl == received_crcl)
-    return crch, crcl, is_valid
+    Returns (expected_crch, expected_crcl, is_valid). The existing AP4C
+    protocol uses CRCH followed by CRCL in the packet.
+    """
+    packet = bytes(packet_bytes)
+    if len(packet) < 3:
+        raise ValueError("A CRC packet must contain at least one data byte and two CRC bytes.")
+
+    data = packet[:-2]
+    expected_crch, expected_crcl = calcrc(data, len(data) - 1)
+    received_crch, received_crcl = packet[-2:]
+    is_valid = (
+        expected_crch == received_crch
+        and expected_crcl == received_crcl
+    )
+    return expected_crch, expected_crcl, is_valid
 
 
-def append_crc(data_bytes):          #this just appends CRC to the data
+def append_crc(data_bytes):
     """
-    Given raw data bytes, computes and appends CRC bytes.
-    Returns full packet bytes.
+    Compute and append the AP4C CRC bytes.
+
+    Returns bytes so the result can be passed directly to pySerial.write().
     """
-    data = list(data_bytes)
-    ldata = len(data) - 1
-    crcl, crch = calcrc(data, ldata)
-    return data_bytes + ([crch, crcl])#bytes
+    payload = bytes(data_bytes)
+    if not payload:
+        raise ValueError("Cannot append a CRC to an empty payload.")
+
+    crch, crcl = calcrc(payload, len(payload) - 1)
+    return payload + bytes((crch, crcl))
 
 
 if __name__ == "__main__":      #use to run above code in this file but is ignored when pther files import it
