@@ -125,7 +125,7 @@ try:
                     vari = var[7]
                     # print(f"Alarm: {sum}")
                     # print(f"{sum:04b}")
-                    st.write(f"##### Alarm: {sum:04b}")
+                    st.write(f"##### Alarm: {sum:08b}")
                     sixteen_bit = f"{sum:08b}"
                     lenS = len(sixteen_bit)
                     k = lenS
@@ -144,7 +144,7 @@ try:
                     vari = var[8]
                     # print(f"Status: {sum}")
                     # print(f"{sum:04b}")
-                    st.write(f"##### Status: {sum:04b}")
+                    st.write(f"##### Status: {sum:08b}")
                     sixteen_bit = f"{sum:08b}"
                     lenS = len(sixteen_bit)
                     k = lenS
