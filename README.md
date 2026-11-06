@@ -28,3 +28,21 @@ Which are mainly:
 
 ## GUI
 <img src="gui.png">
+
+
+## Development and tests
+
+The CRC helper is implemented locally in `crc.py`; it does not require a third-party
+`crc` package. Packet creation returns a `bytes` object suitable for
+`pySerial.write()`.
+
+Run the hardware-independent CRC regression tests from the repository root:
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+The Streamlit application reads a 35-byte binary response, checks its CRC and
+30-byte payload length before decoding it, and logs the seven 16-bit readings
+as big-endian hexadecimal values. A connected AP4C device is still required
+to verify the physical serial protocol end to end.
